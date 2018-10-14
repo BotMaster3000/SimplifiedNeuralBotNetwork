@@ -47,7 +47,6 @@ namespace SimplifiedNeuralBotNetwork
         {
             CurrentDataSets.Clear();
 
-
             for (int i = 0; i < NumberOfDataSetsPerCycle; ++i)
             {
                 int currentDataSetToAdd = rand.Next(0, InputList.Count);
@@ -71,7 +70,7 @@ namespace SimplifiedNeuralBotNetwork
                     totalFitness += network.CalculateFitness(ExpectedList[currentDataSet]);
                 }
 
-                network.Fitness = totalFitness / network.OutputLayerSize;
+                network.Fitness = totalFitness / CurrentDataSets.Count;
             }
         }
 
