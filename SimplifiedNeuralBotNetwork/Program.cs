@@ -43,12 +43,12 @@ namespace SimplifiedNeuralBotNetwork
                 NumberOfNetworksToKeep = NUMBER_OF_NETWORKS_TO_KEEP,
             };
 
-
-            DisplayResults(algorithmHandler.CurrentDataSet, algorithmHandler.CurrentGeneration);
+            NetworkOutputDisplayer.TotalNumberOfNetworksToDisplayEachGeneration = TOTAL_NUMBER_OF_NETWORKS_TO_DISPLAY_EACH_GENERATION;
+            NetworkOutputDisplayer.DisplayResults(algorithmHandler);
             for (int i = 0; i < TOTAL_GENERATIONS_TO_CALCULATE; ++i)
             {
                 algorithmHandler.IterateNetworks(1);
-                DisplayResults(algorithmHandler.CurrentDataSet, algorithmHandler.CurrentGeneration);
+                NetworkOutputDisplayer.DisplayResults(algorithmHandler);
             }
         }
 
@@ -57,24 +57,6 @@ namespace SimplifiedNeuralBotNetwork
             TrainingSetGenerator.GenerateModulusDataSet(NUMBER_OF_TRAINING_NUMBERS);
             inputList = TrainingSetGenerator.GetInputList();
             expectedList = TrainingSetGenerator.GetExpectedList();
-        }
-
-        private static void DisplayResults(int currentDataSet, int currentGeneration)
-        {
-            Console.WriteLine("CurrentGeneration: " + currentGeneration + " | Input: " + inputList[currentDataSet][0]);
-            for (int i = 0; i < TOTAL_NUMBER_OF_NETWORKS_TO_DISPLAY_EACH_GENERATION && i < networkList.Count; i++)
-            {
-                DisplayResult(networkList[i], currentDataSet);
-            }
-        }
-
-        private static void DisplayResult(Network network, int currentDataSet)
-        {
-            for (int i = 0; i < network.OutputValues.Length; ++i)
-            {
-                Console.WriteLine("ID: {0} Result: {1} | Expected: {2} | Fitness: {3}", network.ID, network.OutputValues[i], expectedList[currentDataSet][0], network.Fitness);
-            }
-            Console.WriteLine();
         }
     }
 }

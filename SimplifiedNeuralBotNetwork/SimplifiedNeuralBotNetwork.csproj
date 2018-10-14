@@ -46,6 +46,7 @@
     <Compile Include="GeneticAlgorithmHandler.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="NetworkCreator.cs" />
+    <Compile Include="NetworkOutputDisplayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrainingSetGenerator.cs" />
