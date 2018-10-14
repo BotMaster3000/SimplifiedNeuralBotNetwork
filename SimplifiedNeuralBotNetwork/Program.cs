@@ -50,6 +50,17 @@ namespace SimplifiedNeuralBotNetwork
                 algorithmHandler.IterateNetworks(1);
                 NetworkOutputDisplayer.DisplayResults(algorithmHandler);
             }
+
+            Network bestNetwork = algorithmHandler.NetworkList[0];
+            while (true)
+            {
+                Console.WriteLine("Enter a number");
+                double[] inputValues = new double[] { Convert.ToDouble(Console.ReadLine()) };
+                double[] expectedValues = new double[] { inputValues[0] % 2 };
+                bestNetwork.InputValues = inputValues;
+                bestNetwork.Propagate();
+                NetworkOutputDisplayer.DisplayResult(bestNetwork, expectedValues);
+            }
         }
 
         private static void InitializeLists()

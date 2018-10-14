@@ -79,7 +79,7 @@ namespace SimplifiedNeuralBotNetwork
             }
         }
 
-        public void CalculateFitness(double[] expectedValues)
+        public double CalculateFitness(double[] expectedValues)
         {
             double totalError = 0.0;
             for (int i = 0; i < expectedValues.Length; ++i)
@@ -87,7 +87,7 @@ namespace SimplifiedNeuralBotNetwork
                 totalError += Math.Pow(expectedValues[i] - OutputValues[i], 2);
             }
 
-            Fitness = 1 / totalError;
+            return Fitness = 1.0 / totalError;
         }
     }
 }

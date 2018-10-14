@@ -11,7 +11,7 @@ namespace SimplifiedNeuralBotNetwork
         private readonly Random rand;
 
         public int CurrentGeneration { get; private set; }
-        public int CurrentDataSet { get; set; }
+        public List<int> CurrentDataSets { get; set; } = new List<int>();
 
         public List<Network> NetworkList { get; set; }
 
@@ -33,7 +33,7 @@ namespace SimplifiedNeuralBotNetwork
         {
             for (int i = 0; i < totalGenerationsToCalcualte; ++i)
             {
-                CurrentDataSet = rand.Next(0, InputList.Count);
+                SetCurrentDataSets();
                 CycleNetworks();
                 SortNetworks();
                 RebreedNetworks();
@@ -41,14 +41,32 @@ namespace SimplifiedNeuralBotNetwork
             }
         }
 
+        private void SetCurrentDataSets()
+        {
+            CurrentDataSets.Clear();
+
+            int currentDataSetToAdd = rand.Next(0, InputList.Count);
+
+            if (!CurrentDataSets.Contains(currentDataSetToAdd))
+            {
+                CurrentDataSets.Add(currentDataSetToAdd);
+            }
+        }
+
         private void CycleNetworks()
         {
             foreach (Network network in NetworkList)
             {
-                network.InputValues = InputList[CurrentDataSet];
-                network.Propagate();
+                double totalFitness = 0.0;
+                foreach (int currentDataSet in CurrentDataSets)
+                {
+                    network.InputValues = InputList[currentDataSet];
+                    network.Propagate();
 
-                network.CalculateFitness(ExpectedList[CurrentDataSet]);
+                    totalFitness += network.CalculateFitness(ExpectedList[currentDataSet]);
+                }
+
+                network.Fitness = totalFitness / network.OutputLayerSize;
             }
         }
 

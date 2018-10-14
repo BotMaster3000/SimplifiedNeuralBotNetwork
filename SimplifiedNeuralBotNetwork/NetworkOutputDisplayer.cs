@@ -18,7 +18,13 @@ namespace SimplifiedNeuralBotNetwork
 
             for (int i = 0; i < TotalNumberOfNetworksToDisplayEachGeneration && i < algorithmHandler.NetworkList.Count; i++)
             {
-                DisplayResult(algorithmHandler.NetworkList[i], algorithmHandler.ExpectedList[algorithmHandler.CurrentDataSet]);
+                int lastCurrentDataSet = 0;
+                if(algorithmHandler.CurrentDataSets?.Count > 0)
+                {
+                    lastCurrentDataSet = algorithmHandler.CurrentDataSets.Last();
+                }
+                double[] expectedArray = algorithmHandler.ExpectedList[lastCurrentDataSet];
+                DisplayResult(algorithmHandler.NetworkList[i], expectedArray);
             }
         }
 
