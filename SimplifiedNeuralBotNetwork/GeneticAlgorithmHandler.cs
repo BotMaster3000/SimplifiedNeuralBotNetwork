@@ -47,10 +47,10 @@ namespace SimplifiedNeuralBotNetwork
         {
             CurrentDataSets.Clear();
 
-            int currentDataSetToAdd = rand.Next(0, InputList.Count);
 
             for (int i = 0; i < NumberOfDataSetsPerCycle; ++i)
             {
+                int currentDataSetToAdd = rand.Next(0, InputList.Count);
                 if (!CurrentDataSets.Contains(currentDataSetToAdd))
                 {
                     CurrentDataSets.Add(currentDataSetToAdd);
