@@ -21,6 +21,8 @@ namespace SimplifiedNeuralBotNetwork
         public int NumberOfNetworksToKeep { get; set; }
         public double MutationRate { get; set; }
 
+        public int NumberOfDataSetsPerCycle { get; set; } = 1;
+
         public int IdCounter { get; set; }
 
         public GeneticAlgorithmHandler(Random rand, List<Network> networkList)
@@ -47,9 +49,12 @@ namespace SimplifiedNeuralBotNetwork
 
             int currentDataSetToAdd = rand.Next(0, InputList.Count);
 
-            if (!CurrentDataSets.Contains(currentDataSetToAdd))
+            for (int i = 0; i < NumberOfDataSetsPerCycle; ++i)
             {
-                CurrentDataSets.Add(currentDataSetToAdd);
+                if (!CurrentDataSets.Contains(currentDataSetToAdd))
+                {
+                    CurrentDataSets.Add(currentDataSetToAdd);
+                }
             }
         }
 

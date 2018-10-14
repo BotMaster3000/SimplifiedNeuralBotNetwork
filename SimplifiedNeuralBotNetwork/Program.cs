@@ -16,6 +16,7 @@ namespace SimplifiedNeuralBotNetwork
         private const int NETWORK_AMOUNT = 1000;
         private const int NUMBER_OF_NETWORKS_TO_KEEP = 100;
         private const double MUTATION_RATE = 0.001;
+        private const int NUMBER_OF_DATASETS_PER_CYCLE = 10;
 
         private const int TOTAL_GENERATIONS_TO_CALCULATE = 1000;
 
@@ -41,6 +42,7 @@ namespace SimplifiedNeuralBotNetwork
                 ExpectedList = expectedList,
                 MutationRate = MUTATION_RATE,
                 NumberOfNetworksToKeep = NUMBER_OF_NETWORKS_TO_KEEP,
+                NumberOfDataSetsPerCycle = NUMBER_OF_DATASETS_PER_CYCLE,
             };
 
             NetworkOutputDisplayer.TotalNumberOfNetworksToDisplayEachGeneration = TOTAL_NUMBER_OF_NETWORKS_TO_DISPLAY_EACH_GENERATION;
