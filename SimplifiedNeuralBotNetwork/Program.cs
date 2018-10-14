@@ -24,39 +24,29 @@ namespace SimplifiedNeuralBotNetwork
 
         private static readonly Random rand = new Random();
 
-        private static readonly List<double[]> inputList = new List<double[]>();
-        private static readonly List<double[]> expectedList = new List<double[]>();
+        private static List<double[]> inputList = new List<double[]>();
+        private static List<double[]> expectedList = new List<double[]>();
 
         private static int CurrentDataSet;
 
-        private static readonly List<Network> networkList = new List<Network>();
+        private static List<Network> networkList = new List<Network>();
 
         private static int idCounter;
 
         private static void Main()
         {
-            InitializeNeuralNetworks();
+            NetworkCreator networkCreator = new NetworkCreator(INPUT_LAYERSIZE, HIDDEN_LAYERSIZE, OUTPUT_LAYERSIZE, NETWORK_AMOUNT, rand);
+            networkList = networkCreator.NetworkList;
+
             InitializeLists();
             IterateNetworks();
         }
 
-        private static void InitializeNeuralNetworks()
-        {
-            for (int i = 0; i < NETWORK_AMOUNT; ++i)
-            {
-                Network network = new Network(INPUT_LAYERSIZE, HIDDEN_LAYERSIZE, OUTPUT_LAYERSIZE, rand, idCounter);
-                networkList.Add(network);
-                ++idCounter;
-            }
-        }
-
         private static void InitializeLists()
         {
-            for (int i = 1; i <= NUMBER_OF_TRAINING_NUMBERS; ++i)
-            {
-                inputList.Add(new double[] { i });
-                expectedList.Add(new double[] { i % 2 });
-            }
+            TrainingSetGenerator.GenerateModulusDataSet(NUMBER_OF_TRAINING_NUMBERS);
+            inputList = TrainingSetGenerator.GetInputList();
+            expectedList = TrainingSetGenerator.GetExpectedList();
         }
 
         private static void IterateNetworks()

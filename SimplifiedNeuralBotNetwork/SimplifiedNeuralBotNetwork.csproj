@@ -44,8 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Network.cs" />
+    <Compile Include="NetworkCreator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TrainingSetGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

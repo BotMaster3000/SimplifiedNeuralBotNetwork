@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimplifiedNeuralBotNetwork
 {
-    class Network
+    public class Network
     {
         public int ID { get; set; }
 
