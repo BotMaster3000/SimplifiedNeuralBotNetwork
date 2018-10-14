@@ -6,137 +6,159 @@ using System.Threading.Tasks;
 
 namespace SimplifiedNeuralBotNetwork
 {
-    class Program
+    internal class Program
     {
-        const int inputLayerSize = 1;
-        const int hiddenLayerSize = 2;
-        const int outputLayerSize = 1;
+        private const int INPUT_LAYERSIZE = 1;
+        private const int HIDDEN_LAYERSIZE = 2;
+        private const int OUTPUT_LAYERSIZE = 1;
 
-        const int numberOfTrainingNumbers = 100000;
-        const int networkAmount = 1000;
-        const int numberOfNetworksToKeep = 100;
-        const double mutationRate = 0.001;
+        private const int NUMBER_OF_TRAINING_NUMBERS = 100000;
+        private const int NETWORK_AMOUNT = 1000;
+        private const int NUMBER_OF_NETWORKS_TO_KEEP = 100;
+        private const double MUTATION_RATE = 0.001;
 
-        const int totalNumberNetworksToDisplayEachGeneration = 10;
+        private const int TOTAL_GENERATIONS_TO_CALCULATE = 10000;
+        private static int currentGeneration;
 
+        private const int TOTAL_NUMBER_OF_NETWORKS_TO_DISPLAY_EACH_GENERATION = 10;
 
-        static Random rand = new Random();
+        private static readonly Random rand = new Random();
 
-        static List<double[]> inputList = new List<double[]>();
-        static List<double[]> expectedList = new List<double[]>();
+        private static readonly List<double[]> inputList = new List<double[]>();
+        private static readonly List<double[]> expectedList = new List<double[]>();
 
-        static int CurrentDataSet = 0;
+        private static int CurrentDataSet;
 
-        static List<Network> networkList = new List<Network>();
+        private static readonly List<Network> networkList = new List<Network>();
 
-        static int currentGeneration = 0;
+        private static int idCounter;
 
-        static int idCounter = 0;
-
-        static void Main(string[] args)
+        private static void Main()
         {
-            for (int i = 0; i < networkAmount; ++i)
+            InitializeNeuralNetworks();
+            InitializeLists();
+            IterateNetworks();
+        }
+
+        private static void InitializeNeuralNetworks()
+        {
+            for (int i = 0; i < NETWORK_AMOUNT; ++i)
             {
-                Network network = new Network(inputLayerSize, hiddenLayerSize, outputLayerSize, rand, idCounter);
+                Network network = new Network(INPUT_LAYERSIZE, HIDDEN_LAYERSIZE, OUTPUT_LAYERSIZE, rand, idCounter);
                 networkList.Add(network);
                 ++idCounter;
-            }
-
-            InitializeLists();
-
-            for (; currentGeneration < 10000; ++currentGeneration)
-            {
-
-                CurrentDataSet = rand.Next(0, inputList.Count);
-
-                foreach (Network network in networkList)
-                {
-                    network.InputValues = inputList[CurrentDataSet];
-                    network.Propagate();
-
-                    network.CalculateFitness(expectedList[CurrentDataSet]);
-                }
-
-                for (int i = 0; i < networkList.Count; ++i)
-                {
-                    for (int j = i + 1; j < networkList.Count; ++j)
-                    {
-                        if (networkList[i].Fitness < networkList[j].Fitness)
-                        {
-                            Network tempNetwork = networkList[i];
-                            networkList[i] = networkList[j];
-                            networkList[j] = tempNetwork;
-                        }
-                    }
-                }
-
-                Console.WriteLine("CurrentGeneration: " + currentGeneration + " | Input: " + inputList[CurrentDataSet][0]);
-                for (int i = 0; i < totalNumberNetworksToDisplayEachGeneration && i < networkList.Count; i++)
-                {
-                    DisplayResult(networkList[i]);
-                }
-
-                List<int> networkIdPool = new List<int>();
-                for (int i = 0; i < numberOfNetworksToKeep; ++i)
-                {
-                    for (int j = i; j < numberOfNetworksToKeep; ++j)
-                    {
-                        networkIdPool.Add(i);
-                    }
-                }
-                for (int i = numberOfNetworksToKeep; i < networkList.Count; ++i)
-                {
-                    int networkIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
-                    double[] currentHiddenWeights = (double[])networkList[networkIndexToClone].HiddenWeights.Clone();
-                    double[] currentOutputWeights = (double[])networkList[networkIndexToClone].OutputWeights.Clone();
-
-                    for (int j = 0; j < currentHiddenWeights.Length; j++)
-                    {
-                        double currentMutationFactor = rand.NextDouble() * mutationRate;
-                        if (rand.Next(0, 2) == 0)
-                        {
-                            currentMutationFactor = -currentMutationFactor;
-                        }
-
-                        currentHiddenWeights[j] += currentMutationFactor;
-                    }
-
-                    for (int j = 0; j < currentOutputWeights.Length; j++)
-                    {
-                        double currentMutationFactor = rand.NextDouble() * mutationRate;
-                        if (rand.Next(0, 2) == 0)
-                        {
-                            currentMutationFactor = -currentMutationFactor;
-                        }
-
-                        currentOutputWeights[j] += currentMutationFactor;
-                    }
-
-                    networkList[i].HiddenWeights = currentHiddenWeights;
-                    networkList[i].OutputWeights = currentOutputWeights;
-                    networkList[i].ID = idCounter; // New ID since its basically a new network
-                    ++idCounter;
-                }
             }
         }
 
         private static void InitializeLists()
         {
-            for (int i = 1; i <= numberOfTrainingNumbers; ++i)
+            for (int i = 1; i <= NUMBER_OF_TRAINING_NUMBERS; ++i)
             {
                 inputList.Add(new double[] { i });
                 expectedList.Add(new double[] { i % 2 });
             }
         }
 
+        private static void IterateNetworks()
+        {
+            for (; currentGeneration < TOTAL_GENERATIONS_TO_CALCULATE; ++currentGeneration)
+            {
+                CurrentDataSet = rand.Next(0, inputList.Count);
+                CycleNetworks();
+                SortNetworks();
+                DisplayResults();
+                RebreedNetworks();
+            }
+        }
 
-        public static void DisplayResult(Network network)
+        private static void CycleNetworks()
+        {
+            foreach (Network network in networkList)
+            {
+                network.InputValues = inputList[CurrentDataSet];
+                network.Propagate();
+
+                network.CalculateFitness(expectedList[CurrentDataSet]);
+            }
+        }
+
+        private static void SortNetworks()
+        {
+            for (int i = 0; i < networkList.Count; ++i)
+            {
+                for (int j = i + 1; j < networkList.Count; ++j)
+                {
+                    if (networkList[i].Fitness < networkList[j].Fitness)
+                    {
+                        Network tempNetwork = networkList[i];
+                        networkList[i] = networkList[j];
+                        networkList[j] = tempNetwork;
+                    }
+                }
+            }
+        }
+
+        private static void DisplayResults()
+        {
+            Console.WriteLine("CurrentGeneration: " + currentGeneration + " | Input: " + inputList[CurrentDataSet][0]);
+            for (int i = 0; i < TOTAL_NUMBER_OF_NETWORKS_TO_DISPLAY_EACH_GENERATION && i < networkList.Count; i++)
+            {
+                DisplayResult(networkList[i]);
+            }
+        }
+
+        private static void DisplayResult(Network network)
         {
             for (int i = 0; i < network.OutputValues.Length; ++i)
             {
                 Console.WriteLine("ID: {0} Result: {1} | Expected: {2} | Fitness: {3}", network.ID, network.OutputValues[i], expectedList[CurrentDataSet][0], network.Fitness);
             }
             Console.WriteLine();
+        }
+
+        private static void RebreedNetworks()
+        {
+            List<int> networkIdPool = new List<int>();
+            for (int i = 0; i < NUMBER_OF_NETWORKS_TO_KEEP; ++i)
+            {
+                for (int j = i; j < NUMBER_OF_NETWORKS_TO_KEEP; ++j)
+                {
+                    networkIdPool.Add(i);
+                }
+            }
+            for (int i = NUMBER_OF_NETWORKS_TO_KEEP; i < networkList.Count; ++i)
+            {
+                int networkIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
+                double[] currentHiddenWeights = (double[])networkList[networkIndexToClone].HiddenWeights.Clone();
+                double[] currentOutputWeights = (double[])networkList[networkIndexToClone].OutputWeights.Clone();
+
+                for (int j = 0; j < currentHiddenWeights.Length; j++)
+                {
+                    double currentMutationFactor = rand.NextDouble() * MUTATION_RATE;
+                    if (rand.Next(0, 2) == 0)
+                    {
+                        currentMutationFactor = -currentMutationFactor;
+                    }
+
+                    currentHiddenWeights[j] += currentMutationFactor;
+                }
+
+                for (int j = 0; j < currentOutputWeights.Length; j++)
+                {
+                    double currentMutationFactor = rand.NextDouble() * MUTATION_RATE;
+                    if (rand.Next(0, 2) == 0)
+                    {
+                        currentMutationFactor = -currentMutationFactor;
+                    }
+
+                    currentOutputWeights[j] += currentMutationFactor;
+                }
+
+                networkList[i].HiddenWeights = currentHiddenWeights;
+                networkList[i].OutputWeights = currentOutputWeights;
+                networkList[i].ID = idCounter; // New ID since its basically a new network
+                ++idCounter;
+            }
         }
 
     }
