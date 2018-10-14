@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeneticAlgorithmHandler.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="NetworkCreator.cs" />
     <Compile Include="Program.cs" />
