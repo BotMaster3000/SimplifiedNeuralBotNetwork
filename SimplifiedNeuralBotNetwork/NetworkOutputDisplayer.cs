@@ -26,25 +26,24 @@ namespace SimplifiedNeuralBotNetwork
         {
             Console.WriteLine("ID: {0} | Fitness: {1}", network.ID, network.Fitness);
             Console.Write("Inputs: ");
-            foreach(double inputValue in network.InputValues)
-            {
-                Console.Write(inputValue + " | ");
-            }
-            Console.WriteLine();
+            DisplayArray(network.InputValues);
 
             Console.Write("Outputs: ");
-            foreach(double outputValue in network.OutputValues)
-            {
-                Console.Write(outputValue + " | ");
-            }
-            Console.WriteLine();
+            DisplayArray(network.OutputValues);
 
             Console.Write("Expected: ");
-            foreach(double expectedValue in expectedValues)
+            DisplayArray(expectedValues);
+
+            Console.WriteLine();
+        }
+
+        private static void DisplayArray(double[] valueArray)
+        {
+            foreach(double value in valueArray)
             {
-                Console.Write(expectedValue + " | ");
+                Console.Write(value + " | ");
             }
-            Console.WriteLine("\n");
+            Console.WriteLine();
         }
     }
 }
