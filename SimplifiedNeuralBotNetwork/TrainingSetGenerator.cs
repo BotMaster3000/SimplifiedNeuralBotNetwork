@@ -44,7 +44,12 @@ namespace SimplifiedNeuralBotNetwork
             for (int i = 1; i <= numberOfTrainingSets; ++i)
             {
                 inputList.Add(new double[] { i });
-                expectedList.Add(new double[] { i % 2 });
+                double[] expectedDouble = new double[]
+                {
+                    i % 2 == 0 ? 1 : 0, // Expect 1(true) if 0
+                    i % 2 == 1 ? 1 : 0, // Expect 1(true) if 1
+                };
+                expectedList.Add(expectedDouble);
             }
         }
     }

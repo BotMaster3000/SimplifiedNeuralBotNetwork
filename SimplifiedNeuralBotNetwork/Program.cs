@@ -9,16 +9,16 @@ namespace SimplifiedNeuralBotNetwork
     internal class Program
     {
         private const int INPUT_LAYERSIZE = 1;
-        private const int HIDDEN_LAYERSIZE = 2;
-        private const int OUTPUT_LAYERSIZE = 1;
+        private const int HIDDEN_LAYERSIZE = 3;
+        private const int OUTPUT_LAYERSIZE = 2;
 
         private const int NUMBER_OF_TRAINING_NUMBERS = 100000;
         private const int NETWORK_AMOUNT = 1000;
         private const int NUMBER_OF_NETWORKS_TO_KEEP = 100;
         private const double MUTATION_RATE = 0.001;
-        private const int NUMBER_OF_DATASETS_PER_CYCLE = 10;
+        private const int NUMBER_OF_DATASETS_PER_CYCLE = 100;
 
-        private const int TOTAL_GENERATIONS_TO_CALCULATE = 1000;
+        private const int TOTAL_GENERATIONS_TO_CALCULATE = 5;
 
         private const int TOTAL_NUMBER_OF_NETWORKS_TO_DISPLAY_EACH_GENERATION = 10;
 
@@ -58,7 +58,7 @@ namespace SimplifiedNeuralBotNetwork
             {
                 Console.WriteLine("Enter a number");
                 double[] inputValues = new double[] { Convert.ToDouble(Console.ReadLine()) };
-                double[] expectedValues = new double[] { inputValues[0] % 2 };
+                double[] expectedValues = new double[] { inputValues[0] % 2 == 0 ? 1 : 0, inputValues[0] % 2 == 1 ? 1 : 0 };
                 bestNetwork.InputValues = inputValues;
                 bestNetwork.Propagate();
                 NetworkOutputDisplayer.DisplayResult(bestNetwork, expectedValues);

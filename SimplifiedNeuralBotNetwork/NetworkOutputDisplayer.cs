@@ -30,14 +30,14 @@ namespace SimplifiedNeuralBotNetwork
 
         public static void DisplayResult(Network network, double[] expectedValues)
         {
-            Console.WriteLine("ID: {0} | Fitness: {1}", network.ID, network.Fitness);
-            Console.Write("Inputs: ");
+            Console.WriteLine("ID: {0} | Average Fitness: {1}", network.ID, network.Fitness);
+            Console.Write("Last Inputs: ");
             DisplayArray(network.InputValues);
 
-            Console.Write("Outputs: ");
+            Console.Write("Last Outputs: ");
             DisplayArray(network.OutputValues);
 
-            Console.Write("Expected: ");
+            Console.Write("Last Expected: ");
             DisplayArray(expectedValues);
 
             Console.WriteLine();
