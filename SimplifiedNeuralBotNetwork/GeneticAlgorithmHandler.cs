@@ -92,7 +92,7 @@ namespace SimplifiedNeuralBotNetwork
 
         private void RebreedNetworks()
         {
-            List<int> networkIdPool = new List<int>();
+            List<int> networkIdPool = new List<int>(); // Create a Pool. Highest Fitness-Network is most likely to breed
             for (int i = 0; i < NumberOfNetworksToKeep; ++i)
             {
                 for (int j = i; j < NumberOfNetworksToKeep; ++j)

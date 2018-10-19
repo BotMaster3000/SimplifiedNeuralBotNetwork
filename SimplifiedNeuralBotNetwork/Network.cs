@@ -58,22 +58,26 @@ namespace SimplifiedNeuralBotNetwork
 
         public void Propagate()
         {
+            int currentWeight = 0;
             for (int i = 0; i < HiddenValues.Length; ++i)
             {
                 double currentHiddenValue = 0;
                 for (int j = 0; j < InputValues.Length; ++j)
                 {
-                    currentHiddenValue += InputValues[j] * HiddenWeights[i];
+                    currentHiddenValue += InputValues[j] * HiddenWeights[currentWeight];
+                    ++currentWeight;
                 }
                 HiddenValues[i] = currentHiddenValue;
             }
 
+            currentWeight = 0;
             for (int i = 0; i < OutputValues.Length; ++i)
             {
                 double currentOutputValue = 0;
                 for (int j = 0; j < HiddenValues.Length; ++j)
                 {
-                    currentOutputValue += HiddenValues[j] * OutputWeights[i];
+                    currentOutputValue += HiddenValues[j] * OutputWeights[currentWeight];
+                    ++currentWeight;
                 }
                 OutputValues[i] = currentOutputValue;
             }

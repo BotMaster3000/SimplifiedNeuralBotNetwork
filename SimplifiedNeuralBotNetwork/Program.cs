@@ -13,12 +13,12 @@ namespace SimplifiedNeuralBotNetwork
         private const int OUTPUT_LAYERSIZE = 2;
 
         private const int NUMBER_OF_TRAINING_NUMBERS = 100000;
-        private const int NETWORK_AMOUNT = 1000;
-        private const int NUMBER_OF_NETWORKS_TO_KEEP = 100;
+        private const int NETWORK_AMOUNT = 50;
+        private const int NUMBER_OF_NETWORKS_TO_KEEP = 10;
         private const double MUTATION_RATE = 0.001;
-        private const int NUMBER_OF_DATASETS_PER_CYCLE = 100;
+        private const int NUMBER_OF_DATASETS_PER_CYCLE = 10;
 
-        private const int TOTAL_GENERATIONS_TO_CALCULATE = 5;
+        private const int TOTAL_GENERATIONS_TO_CALCULATE = 5000;
 
         private const int TOTAL_NUMBER_OF_NETWORKS_TO_DISPLAY_EACH_GENERATION = 10;
 
