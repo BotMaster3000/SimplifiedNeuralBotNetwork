@@ -102,9 +102,10 @@ namespace SimplifiedNeuralBotNetwork
             }
             for (int i = NumberOfNetworksToKeep; i < NetworkList.Count; ++i)
             {
-                int networkIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
-                double[] currentHiddenWeights = (double[])NetworkList[networkIndexToClone].HiddenWeights.Clone();
-                double[] currentOutputWeights = (double[])NetworkList[networkIndexToClone].OutputWeights.Clone();
+                int networkHiddenWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
+                int networkOutputWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
+                double[] currentHiddenWeights = (double[])NetworkList[networkHiddenWeightsIndexToClone].HiddenWeights.Clone();
+                double[] currentOutputWeights = (double[])NetworkList[networkOutputWeightsIndexToClone].OutputWeights.Clone();
 
                 for (int j = 0; j < currentHiddenWeights.Length; j++)
                 {
