@@ -18,7 +18,7 @@ namespace SimplifiedNeuralBotNetwork
         private const double MUTATION_RATE = 0.001;
         private const int NUMBER_OF_DATASETS_PER_CYCLE = 1000;
 
-        private const int TOTAL_GENERATIONS_TO_CALCULATE = 5000;
+        private const int TOTAL_GENERATIONS_TO_CALCULATE = 500;
 
         private const int TOTAL_NUMBER_OF_NETWORKS_TO_DISPLAY_EACH_GENERATION = 10;
 

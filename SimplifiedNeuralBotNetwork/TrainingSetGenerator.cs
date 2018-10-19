@@ -52,5 +52,19 @@ namespace SimplifiedNeuralBotNetwork
                 expectedList.Add(expectedDouble);
             }
         }
+
+        public static void GenerateBitDetermineDataSet()
+        {
+            ResetLists();
+
+            // Should say first Output 1, second Output 0 if input is 0,
+            // and first Output 0, second Output 1 if input is 1.
+
+            inputList.Add(new double[0]);
+            expectedList.Add(new double[] { 1, 0 });
+
+            inputList.Add(new double[1]);
+            expectedList.Add(new double[] { 0, 1 });
+        }
     }
 }

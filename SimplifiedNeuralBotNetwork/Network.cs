@@ -67,7 +67,7 @@ namespace SimplifiedNeuralBotNetwork
                     currentHiddenValue += InputValues[j] * HiddenWeights[currentWeight];
                     ++currentWeight;
                 }
-                HiddenValues[i] = currentHiddenValue;
+                HiddenValues[i] = 1 / (1 + currentHiddenValue);
             }
 
             currentWeight = 0;
@@ -79,7 +79,7 @@ namespace SimplifiedNeuralBotNetwork
                     currentOutputValue += HiddenValues[j] * OutputWeights[currentWeight];
                     ++currentWeight;
                 }
-                OutputValues[i] = currentOutputValue;
+                OutputValues[i] = 1 / (1 + currentOutputValue);
             }
         }
 
