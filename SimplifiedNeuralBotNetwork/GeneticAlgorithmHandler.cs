@@ -150,25 +150,19 @@ namespace SimplifiedNeuralBotNetwork
                 for (int j = 0; j < currentHiddenWeights.Length; ++j)
                 {
                     int networkHiddenWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
-                    //int weightIndexToClone = rand.Next(0, NetworkList[networkHiddenWeightsIndexToClone].HiddenWeights.Length);
                     currentHiddenWeights[j] = NetworkList[networkHiddenWeightsIndexToClone].HiddenWeights[j];
                 }
                 for (int j = 0; j < currentOutputWeights.Length; ++j)
                 {
                     int networkIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
-                    //int weighIndexToClone = rand.Next(0, NetworkList[networkIndexToClone].OutputWeights.Length);
                     currentOutputWeights[j] = NetworkList[networkIndexToClone].OutputWeights[j];
                 }
-                //int networkHiddenWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
-                //int networkOutputWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
-                //double[] currentHiddenWeights = (double[])NetworkList[networkHiddenWeightsIndexToClone].HiddenWeights.Clone();
-                //double[] currentOutputWeights = (double[])NetworkList[networkOutputWeightsIndexToClone].OutputWeights.Clone();
 
                 for (int j = 0; j < currentHiddenWeights.Length; j++)
                 {
                     if (rand.NextDouble() < MutationChance)
                     {
-                        double currentMutationFactor = rand.NextDouble()/* * MutationRate*/;
+                        double currentMutationFactor = rand.NextDouble() * MutationRate;
                         if (rand.Next(0, 2) == 0)
                         {
                             currentMutationFactor = -currentMutationFactor;
@@ -182,7 +176,7 @@ namespace SimplifiedNeuralBotNetwork
                 {
                     if (rand.NextDouble() < MutationChance)
                     {
-                        double currentMutationFactor = rand.NextDouble()/* * MutationRate*/;
+                        double currentMutationFactor = rand.NextDouble() * MutationRate;
                         if (rand.Next(0, 2) == 0)
                         {
                             currentMutationFactor = -currentMutationFactor;
