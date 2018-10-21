@@ -9,7 +9,7 @@ namespace SimplifiedNeuralBotNetwork
     internal class Program
     {
         private static int inputLayerSize = 1;
-        private const int HIDDEN_LAYERSIZE = 6;
+        private const int HIDDEN_LAYERSIZE = 2;
         private static int outputLayerSize = 1;
 
         private const int NUMBER_OF_TRAINING_NUMBERS = 1000;
@@ -19,7 +19,7 @@ namespace SimplifiedNeuralBotNetwork
         private const double MUTATION_RATE = 0.10;
         private const int NUMBER_OF_DATASETS_PER_CYCLE = 255;
 
-        private const int TOTAL_GENERATIONS_TO_CALCULATE = 5000;
+        private const int TOTAL_GENERATIONS_TO_CALCULATE = 500;
 
         private const int TOTAL_NUMBER_OF_NETWORKS_TO_DISPLAY_EACH_GENERATION = 10;
 
