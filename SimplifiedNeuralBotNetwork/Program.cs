@@ -61,7 +61,7 @@ namespace SimplifiedNeuralBotNetwork
                 Console.WriteLine("Enter a number");
                 double[] inputValues = new double[] { Convert.ToDouble(Console.ReadLine()) };
                 double[] expectedValues = new double[] { inputValues[0] % 2 == 0 ? 1 : 0, inputValues[0] % 2 == 1 ? 1 : 0 };
-                bestNetwork.InputValues = inputValues;
+                bestNetwork.SetInputs(inputValues);
                 bestNetwork.Propagate();
                 NetworkOutputDisplayer.DisplayResult(bestNetwork, expectedValues);
             }

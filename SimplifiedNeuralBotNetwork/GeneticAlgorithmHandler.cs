@@ -107,7 +107,7 @@ namespace SimplifiedNeuralBotNetwork
                 double totalFitness = 0.0;
                 foreach (int currentDataSet in CurrentDataSets)
                 {
-                    network.InputValues = InputList[currentDataSet];
+                    network.SetInputs(InputList[currentDataSet]);
                     network.Propagate();
 
                     totalFitness += network.CalculateFitness(ExpectedList[currentDataSet]);
@@ -139,49 +139,54 @@ namespace SimplifiedNeuralBotNetwork
 
             for (int i = NumberOfNetworksToKeep; i < NetworkList.Count; ++i)
             {
-                double[] currentHiddenWeights = new double[NetworkList[i].HiddenWeights.Length];
-                double[] currentOutputWeights = new double[NetworkList[i].OutputWeights.Length];
-                for (int j = 0; j < currentHiddenWeights.Length; ++j)
+                for (int nodeIndex = 0; nodeIndex < NetworkList[i].HiddenNodes.Length; nodeIndex++)
                 {
-                    int networkHiddenWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
-                    currentHiddenWeights[j] = NetworkList[networkHiddenWeightsIndexToClone].HiddenWeights[j];
-                }
-                for (int j = 0; j < currentOutputWeights.Length; ++j)
-                {
-                    int networkIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
-                    currentOutputWeights[j] = NetworkList[networkIndexToClone].OutputWeights[j];
-                }
-
-                for (int j = 0; j < currentHiddenWeights.Length; j++)
-                {
-                    if (rand.NextDouble() < MutationChance)
+                    double[] currentWeights = new double[NetworkList[i].HiddenNodes[nodeIndex].Weights.Length];
+                    for (int weightIndex = 0; weightIndex < currentWeights.Length; ++weightIndex)
                     {
-                        double currentMutationFactor = rand.NextDouble() * MutationRate;
-                        if (rand.Next(0, 2) == 0)
-                        {
-                            currentMutationFactor = -currentMutationFactor;
-                        }
-
-                        currentHiddenWeights[j] += currentMutationFactor;
+                        int networkWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
+                        currentWeights[weightIndex] = NetworkList[networkWeightsIndexToClone].HiddenNodes[nodeIndex].Weights[weightIndex];
                     }
-                }
-
-                for (int j = 0; j < currentOutputWeights.Length; j++)
-                {
-                    if (rand.NextDouble() < MutationChance)
+                    for(int weightIndex = 0; weightIndex < currentWeights.Length; ++weightIndex)
                     {
-                        double currentMutationFactor = rand.NextDouble() * MutationRate;
-                        if (rand.Next(0, 2) == 0)
+                        if(rand.NextDouble() < MutationChance)
                         {
-                            currentMutationFactor = -currentMutationFactor;
+                            double currentMutationFactor = rand.NextDouble() * MutationRate;
+                            if(rand.Next(0, 2) == 0)
+                            {
+                                currentMutationFactor = -currentMutationFactor;
+                            }
+                            currentWeights[weightIndex] += currentMutationFactor;
                         }
-
-                        currentOutputWeights[j] += currentMutationFactor;
                     }
+
+                    NetworkList[i].HiddenNodes[nodeIndex].Weights = currentWeights;
                 }
 
-                NetworkList[i].HiddenWeights = currentHiddenWeights;
-                NetworkList[i].OutputWeights = currentOutputWeights;
+                for (int nodeIndex = 0; nodeIndex < NetworkList[i].OutputNodes.Length; nodeIndex++)
+                {
+                    double[] currentWeights = new double[NetworkList[i].OutputNodes[nodeIndex].Weights.Length];
+                    for (int weightIndex = 0; weightIndex < currentWeights.Length; ++weightIndex)
+                    {
+                        int networkWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
+                        currentWeights[weightIndex] = NetworkList[networkWeightsIndexToClone].OutputNodes[nodeIndex].Weights[weightIndex];
+                    }
+                    for (int weightIndex = 0; weightIndex < currentWeights.Length; ++weightIndex)
+                    {
+                        if (rand.NextDouble() < MutationChance)
+                        {
+                            double currentMutationFactor = rand.NextDouble() * MutationRate;
+                            if (rand.Next(0, 2) == 0)
+                            {
+                                currentMutationFactor = -currentMutationFactor;
+                            }
+                            currentWeights[weightIndex] += currentMutationFactor;
+                        }
+                    }
+
+                    NetworkList[i].OutputNodes[nodeIndex].Weights = currentWeights;
+                }
+
                 NetworkList[i].ID = IdCounter; // New ID since its basically a new network
                 ++IdCounter;
             }

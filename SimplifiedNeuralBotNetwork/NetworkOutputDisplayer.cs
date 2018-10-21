@@ -32,10 +32,10 @@ namespace SimplifiedNeuralBotNetwork
         {
             Console.WriteLine("ID: {0} | Average Fitness: {1}", network.ID, network.Fitness);
             Console.Write("Last Inputs: ");
-            DisplayArray(network.InputValues);
+            DisplayArray(network.GetInputs());
 
             Console.Write("Last Outputs: ");
-            DisplayArray(network.OutputValues);
+            DisplayArray(network.GetOutputs());
 
             Console.Write("Last Expected: ");
             DisplayArray(expectedValues);

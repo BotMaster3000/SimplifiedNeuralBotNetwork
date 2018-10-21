@@ -14,13 +14,11 @@ namespace SimplifiedNeuralBotNetwork
         public int HiddenLayerSize { get; set; }
         public int OutputLayerSize { get; set; }
 
-        public double[] InputValues { get; set; }
+        public Node[] InputNodes { get; set; }
 
-        public double[] HiddenValues { get; set; }
-        public double[] HiddenWeights { get; set; }
+        public Node[] HiddenNodes { get; set; }
 
-        public double[] OutputValues { get; set; }
-        public double[] OutputWeights { get; set; }
+        public Node[] OutputNodes { get; set; }
 
         public double Fitness { get; set; }
 
@@ -34,52 +32,69 @@ namespace SimplifiedNeuralBotNetwork
 
             this.rand = rand;
 
-            InputValues = new double[inputLayerSize];
+            InputNodes = new Node[inputLayerSize];
+            for(int i = 0; i < InputNodes.Length; ++i)
+            {
+                InputNodes[i] = new Node();
+            }
 
-            HiddenValues = new double[hiddenLayerSize];
-            HiddenWeights = new double[hiddenLayerSize * inputLayerSize];
+            HiddenNodes = new Node[hiddenLayerSize];
+            for (int i = 0; i < HiddenNodes.Length; i++)
+            {
+                HiddenNodes[i] = new Node
+                {
+                    Weights = new double[inputLayerSize]
+                };
+            }
 
-            OutputValues = new double[outputLayerSize];
-            OutputWeights = new double[outputLayerSize * hiddenLayerSize];
+            OutputNodes = new Node[outputLayerSize];
+            for (int i = 0; i < OutputNodes.Length; i++)
+            {
+                OutputNodes[i] = new Node
+                {
+                    Weights = new double[hiddenLayerSize]
+                };
+            }
 
             ID = id;
 
-            InitializeWeights(HiddenWeights);
-            InitializeWeights(OutputWeights);
+            InitializeWeights(HiddenNodes);
+            InitializeWeights(OutputNodes);
         }
 
-        private void InitializeWeights(double[] weightArray)
+        private void InitializeWeights(Node[] nodeArray)
         {
-            for (int i = 0; i < weightArray.Length; ++i)
+            foreach(Node node in nodeArray)
             {
-                weightArray[i] = rand.NextDouble();
+                for (int i = 0; i < node.Weights.Length; i++)
+                {
+                    node.Weights[i] = rand.NextDouble();
+                }
             }
         }
 
         public void Propagate()
         {
-            PropagateArray(InputValues, HiddenValues, HiddenWeights, true);
-            PropagateArray(HiddenValues, OutputValues, OutputWeights, true);
+            PropagateArray(InputNodes, HiddenNodes, true);
+            PropagateArray(HiddenNodes, OutputNodes, true);
         }
 
-        private void PropagateArray(double[] leftArrayValues, double[] rightArrayValues, double[] rightArrayWeights, bool useSigmoid)
+        private void PropagateArray(Node[] leftLayer, Node[] rightLayer, bool useSigmoid)
         {
-            int currentWeight = 0;
-            for (int i = 0; i < rightArrayValues.Length; ++i)
+            for(int i = 0; i < rightLayer.Length; ++i)
             {
-                double currentHiddenValue = 0;
-                for (int j = 0; j < leftArrayValues.Length; ++j)
+                double currentWeightedValue = 0.0;
+                for(int j = 0; j < leftLayer.Length; ++j)
                 {
-                    currentHiddenValue += leftArrayValues[j] * rightArrayWeights[currentWeight];
-                    ++currentWeight;
+                    currentWeightedValue += leftLayer[j].Value * rightLayer[i].Weights[j];
                 }
                 if (useSigmoid)
                 {
-                    rightArrayValues[i] = 1.0 / (1 + currentHiddenValue);
+                    rightLayer[i].Value = 1.0 / (1 + currentWeightedValue);
                 }
                 else
                 {
-                    rightArrayValues[i] = currentHiddenValue;
+                    rightLayer[i].Value = currentWeightedValue;
                 }
             }
         }
@@ -87,19 +102,44 @@ namespace SimplifiedNeuralBotNetwork
         public double CalculateFitness(double[] expectedValues)
         {
             double numberOfCorrectAwnsers = 0.0;
-            for (int i = 0; i < expectedValues.Length; ++i)
+            for(int i = 0; i < expectedValues.Length; ++i)
             {
-                numberOfCorrectAwnsers += Math.Round(OutputValues[i], 0, MidpointRounding.AwayFromZero) == expectedValues[i] ? 1 : 0;
+                numberOfCorrectAwnsers += Math.Round(OutputNodes[i].Value, 0, MidpointRounding.AwayFromZero) == expectedValues[i] ? 1 : 0;
             }
-            return numberOfCorrectAwnsers /*/ expectedValues.Length*/;
+            return numberOfCorrectAwnsers;
+        }
 
-            //double totalError = 0.0;
-            //for (int i = 0; i < expectedValues.Length; ++i)
-            //{
-            //    totalError += Math.Pow(expectedValues[i] - OutputValues[i], 2);
-            //}
-            ////return Fitness = 1.0 / totalError;
-            //return Fitness = expectedValues.Length / totalError;
+        public void SetInputs(double[] inputArray)
+        {
+            if(inputArray.Length != InputLayerSize)
+            {
+                throw new ArgumentException("Data-Size and Input-Size do not match");
+            }
+
+            for(int i = 0; i < inputArray.Length; ++i)
+            {
+                InputNodes[i].Value = inputArray[i];
+            }
+        }
+
+        public double[] GetInputs()
+        {
+            return GetValues(InputNodes);
+        }
+
+        public double[] GetOutputs()
+        {
+            return GetValues(OutputNodes);
+        }
+
+        private double[] GetValues(Node[] layer)
+        {
+            double[] values = new double[layer.Length];
+            for (int i = 0; i < layer.Length; ++i)
+            {
+                values[i] = layer[i].Value;
+            }
+            return values;
         }
     }
 }
