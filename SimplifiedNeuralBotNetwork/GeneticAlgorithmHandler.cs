@@ -135,14 +135,8 @@ namespace SimplifiedNeuralBotNetwork
 
         private void RebreedNetworks()
         {
-            List<int> networkIdPool = new List<int>(); // Create a Pool. Highest Fitness-Network is most likely to breed
-            for (int i = 0; i < NumberOfNetworksToKeep; ++i)
-            {
-                for (int j = i; j < NumberOfNetworksToKeep; ++j)
-                {
-                    networkIdPool.Add(i);
-                }
-            }
+            List<int> networkIdPool = CreateNumberPool();
+
             for (int i = NumberOfNetworksToKeep; i < NetworkList.Count; ++i)
             {
                 double[] currentHiddenWeights = new double[NetworkList[i].HiddenWeights.Length];
@@ -191,6 +185,19 @@ namespace SimplifiedNeuralBotNetwork
                 NetworkList[i].ID = IdCounter; // New ID since its basically a new network
                 ++IdCounter;
             }
+        }
+
+        private List<int> CreateNumberPool()
+        {
+            List<int> numberPool = new List<int>(); // Create a Pool. Highest Fitness-Network is most likely to breed
+            for (int i = 0; i < NumberOfNetworksToKeep; ++i)
+            {
+                for (int j = i; j < NumberOfNetworksToKeep; ++j)
+                {
+                    numberPool.Add(i);
+                }
+            }
+            return numberPool;
         }
     }
 }
