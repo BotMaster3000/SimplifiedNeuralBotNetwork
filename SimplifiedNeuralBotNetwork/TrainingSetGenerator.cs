@@ -46,8 +46,7 @@ namespace SimplifiedNeuralBotNetwork
                 inputList.Add(new double[] { i });
                 double[] expectedDouble = new double[]
                 {
-                    i % 2 == 0 ? 1 : 0, // Expect 1(true) if 0
-                    i % 2 == 1 ? 1 : 0, // Expect 1(true) if 1
+                    i % 2
                 };
                 expectedList.Add(expectedDouble);
             }
@@ -57,14 +56,39 @@ namespace SimplifiedNeuralBotNetwork
         {
             ResetLists();
 
-            // Should say first Output 1, second Output 0 if input is 0,
-            // and first Output 0, second Output 1 if input is 1.
+            inputList.Add(new double[] { 0 });
+            expectedList.Add(new double[] { 0 });
 
-            inputList.Add(new double[0]);
-            expectedList.Add(new double[] { 1, 0 });
+            inputList.Add(new double[] { 1 });
+            expectedList.Add(new double[] { 1 });
+        }
 
-            inputList.Add(new double[1]);
-            expectedList.Add(new double[] { 0, 1 });
+        public static void GenerateBinaryNumberDataSet()
+        {
+            ResetLists();
+
+            for (int i = 0; i < 255; ++i)
+            {
+                char[] numberArray = Convert.ToString(i, 2).PadLeft(8, '0').ToCharArray();
+
+                double[] tempDouble = new double[numberArray.Length];
+                for (int j = 0; j < numberArray.Length; j++)
+                {
+                    switch (numberArray[j])
+                    {
+                        case '0':
+                            tempDouble[j] = 0;
+                            break;
+                        case '1':
+                            tempDouble[j] = 1;
+                            break;
+                        default:
+                            throw new Exception();
+                    }
+                }
+                inputList.Add(tempDouble);
+                expectedList.Add(new double[] { i > 127 ? 1 : 0 });
+            }
         }
     }
 }

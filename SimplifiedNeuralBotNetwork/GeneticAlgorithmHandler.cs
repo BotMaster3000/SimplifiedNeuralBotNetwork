@@ -15,10 +15,16 @@ namespace SimplifiedNeuralBotNetwork
 
         public List<Network> NetworkList { get; set; }
 
-        public List<double[]> InputList { get; set; }
+        private List<double[]> inputList;
+        public List<double[]> InputList
+        {
+            get { return inputList; }
+            set { inputList = NormalizeData(value); }
+        }
         public List<double[]> ExpectedList { get; set; }
 
         public int NumberOfNetworksToKeep { get; set; }
+        public double MutationChance { get; set; }
         public double MutationRate { get; set; }
 
         public int NumberOfDataSetsPerCycle { get; set; } = 1;
@@ -29,6 +35,43 @@ namespace SimplifiedNeuralBotNetwork
         {
             this.rand = rand;
             NetworkList = networkList;
+        }
+
+        private List<double[]> NormalizeData(List<double[]> dataSetLists)
+        {
+            double minValue = dataSetLists[0][0];
+            double maxValue = dataSetLists[0][0];
+
+            foreach (double[] dataSet in dataSetLists)
+            {
+                foreach (double data in dataSet)
+                {
+                    if (data < minValue)
+                    {
+                        minValue = data;
+                    }
+                    if (data > maxValue)
+                    {
+                        maxValue = data;
+                    }
+                }
+            }
+
+            if (minValue != maxValue)
+            {
+                foreach (double[] dataSet in dataSetLists)
+                {
+                    for (int i = 0; i < dataSet.Length; ++i)
+                    {
+                        dataSet[i] = ((dataSet[i] - minValue) / (maxValue - minValue)) /*-0.5*/;
+                    }
+                }
+                return dataSetLists;
+            }
+            else
+            {
+                throw new Exception("Inputs not normalizable");
+            }
         }
 
         public void IterateNetworks(int totalGenerationsToCalcualte)
@@ -102,31 +145,51 @@ namespace SimplifiedNeuralBotNetwork
             }
             for (int i = NumberOfNetworksToKeep; i < NetworkList.Count; ++i)
             {
-                int networkHiddenWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
-                int networkOutputWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
-                double[] currentHiddenWeights = (double[])NetworkList[networkHiddenWeightsIndexToClone].HiddenWeights.Clone();
-                double[] currentOutputWeights = (double[])NetworkList[networkOutputWeightsIndexToClone].OutputWeights.Clone();
+                double[] currentHiddenWeights = new double[NetworkList[i].HiddenWeights.Length];
+                double[] currentOutputWeights = new double[NetworkList[i].OutputWeights.Length];
+                for (int j = 0; j < currentHiddenWeights.Length; ++j)
+                {
+                    int networkHiddenWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
+                    //int weightIndexToClone = rand.Next(0, NetworkList[networkHiddenWeightsIndexToClone].HiddenWeights.Length);
+                    currentHiddenWeights[j] = NetworkList[networkHiddenWeightsIndexToClone].HiddenWeights[j];
+                }
+                for (int j = 0; j < currentOutputWeights.Length; ++j)
+                {
+                    int networkIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
+                    //int weighIndexToClone = rand.Next(0, NetworkList[networkIndexToClone].OutputWeights.Length);
+                    currentOutputWeights[j] = NetworkList[networkIndexToClone].OutputWeights[j];
+                }
+                //int networkHiddenWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
+                //int networkOutputWeightsIndexToClone = networkIdPool[rand.Next(0, networkIdPool.Count)];
+                //double[] currentHiddenWeights = (double[])NetworkList[networkHiddenWeightsIndexToClone].HiddenWeights.Clone();
+                //double[] currentOutputWeights = (double[])NetworkList[networkOutputWeightsIndexToClone].OutputWeights.Clone();
 
                 for (int j = 0; j < currentHiddenWeights.Length; j++)
                 {
-                    double currentMutationFactor = rand.NextDouble() * MutationRate;
-                    if (rand.Next(0, 2) == 0)
+                    if (rand.NextDouble() < MutationChance)
                     {
-                        currentMutationFactor = -currentMutationFactor;
-                    }
+                        double currentMutationFactor = rand.NextDouble()/* * MutationRate*/;
+                        if (rand.Next(0, 2) == 0)
+                        {
+                            currentMutationFactor = -currentMutationFactor;
+                        }
 
-                    currentHiddenWeights[j] += currentMutationFactor;
+                        currentHiddenWeights[j] += currentMutationFactor;
+                    }
                 }
 
                 for (int j = 0; j < currentOutputWeights.Length; j++)
                 {
-                    double currentMutationFactor = rand.NextDouble() * MutationRate;
-                    if (rand.Next(0, 2) == 0)
+                    if (rand.NextDouble() < MutationChance)
                     {
-                        currentMutationFactor = -currentMutationFactor;
-                    }
+                        double currentMutationFactor = rand.NextDouble()/* * MutationRate*/;
+                        if (rand.Next(0, 2) == 0)
+                        {
+                            currentMutationFactor = -currentMutationFactor;
+                        }
 
-                    currentOutputWeights[j] += currentMutationFactor;
+                        currentOutputWeights[j] += currentMutationFactor;
+                    }
                 }
 
                 NetworkList[i].HiddenWeights = currentHiddenWeights;

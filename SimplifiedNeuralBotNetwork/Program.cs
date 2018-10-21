@@ -8,17 +8,18 @@ namespace SimplifiedNeuralBotNetwork
 {
     internal class Program
     {
-        private const int INPUT_LAYERSIZE = 1;
-        private const int HIDDEN_LAYERSIZE = 3;
-        private const int OUTPUT_LAYERSIZE = 2;
+        private static int inputLayerSize = 1;
+        private const int HIDDEN_LAYERSIZE = 6;
+        private static int outputLayerSize = 1;
 
-        private const int NUMBER_OF_TRAINING_NUMBERS = 100000;
-        private const int NETWORK_AMOUNT = 500;
+        private const int NUMBER_OF_TRAINING_NUMBERS = 1000;
+        private const int NETWORK_AMOUNT = 1000;
         private const int NUMBER_OF_NETWORKS_TO_KEEP = 10;
-        private const double MUTATION_RATE = 0.001;
-        private const int NUMBER_OF_DATASETS_PER_CYCLE = 1000;
+        private const double MUTATION_CHANCE = 0.01;
+        private const double MUTATION_RATE = 0.10;
+        private const int NUMBER_OF_DATASETS_PER_CYCLE = 255;
 
-        private const int TOTAL_GENERATIONS_TO_CALCULATE = 500;
+        private const int TOTAL_GENERATIONS_TO_CALCULATE = 5000;
 
         private const int TOTAL_NUMBER_OF_NETWORKS_TO_DISPLAY_EACH_GENERATION = 10;
 
@@ -31,15 +32,16 @@ namespace SimplifiedNeuralBotNetwork
 
         private static void Main()
         {
-            NetworkCreator networkCreator = new NetworkCreator(INPUT_LAYERSIZE, HIDDEN_LAYERSIZE, OUTPUT_LAYERSIZE, NETWORK_AMOUNT, rand);
-            networkList = networkCreator.NetworkList;
-
             InitializeLists();
+
+            NetworkCreator networkCreator = new NetworkCreator(inputLayerSize, HIDDEN_LAYERSIZE, outputLayerSize, NETWORK_AMOUNT, rand);
+            networkList = networkCreator.NetworkList;
 
             GeneticAlgorithmHandler algorithmHandler = new GeneticAlgorithmHandler(rand, networkList)
             {
                 InputList = inputList,
                 ExpectedList = expectedList,
+                MutationChance = MUTATION_CHANCE,
                 MutationRate = MUTATION_RATE,
                 NumberOfNetworksToKeep = NUMBER_OF_NETWORKS_TO_KEEP,
                 NumberOfDataSetsPerCycle = NUMBER_OF_DATASETS_PER_CYCLE,
@@ -67,9 +69,14 @@ namespace SimplifiedNeuralBotNetwork
 
         private static void InitializeLists()
         {
-            TrainingSetGenerator.GenerateModulusDataSet(NUMBER_OF_TRAINING_NUMBERS);
+            TrainingSetGenerator.GenerateBinaryNumberDataSet();
+            //TrainingSetGenerator.GenerateModulusDataSet(NUMBER_OF_TRAINING_NUMBERS);
+            //TrainingSetGenerator.GenerateBitDetermineDataSet();
             inputList = TrainingSetGenerator.GetInputList();
             expectedList = TrainingSetGenerator.GetExpectedList();
+
+            inputLayerSize = inputList[0].Length;
+            outputLayerSize = expectedList[0].Length;
         }
     }
 }

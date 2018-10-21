@@ -10,9 +10,9 @@ namespace SimplifiedNeuralBotNetwork
     {
         public int ID { get; set; }
 
-        public double InputLayerSize { get; set; }
-        public double HiddenLayerSize { get; set; }
-        public double OutputLayerSize { get; set; }
+        public int InputLayerSize { get; set; }
+        public int HiddenLayerSize { get; set; }
+        public int OutputLayerSize { get; set; }
 
         public double[] InputValues { get; set; }
 
@@ -67,7 +67,7 @@ namespace SimplifiedNeuralBotNetwork
                     currentHiddenValue += InputValues[j] * HiddenWeights[currentWeight];
                     ++currentWeight;
                 }
-                HiddenValues[i] = 1 / (1 + currentHiddenValue);
+                HiddenValues[i] = currentHiddenValue;
             }
 
             currentWeight = 0;
@@ -79,19 +79,26 @@ namespace SimplifiedNeuralBotNetwork
                     currentOutputValue += HiddenValues[j] * OutputWeights[currentWeight];
                     ++currentWeight;
                 }
-                OutputValues[i] = 1 / (1 + currentOutputValue);
+                OutputValues[i] = 1.0 / (1 + currentOutputValue);
             }
         }
 
         public double CalculateFitness(double[] expectedValues)
         {
-            double totalError = 0.0;
+            double numberOfCorrectAwnsers = 0.0;
             for (int i = 0; i < expectedValues.Length; ++i)
             {
-                totalError += Math.Pow(expectedValues[i] - OutputValues[i], 2);
+                numberOfCorrectAwnsers += Math.Round(OutputValues[i], 0, MidpointRounding.AwayFromZero) == expectedValues[i] ? 1 : 0;
             }
+            return numberOfCorrectAwnsers /*/ expectedValues.Length*/;
 
-            return Fitness = 1.0 / totalError;
+            //double totalError = 0.0;
+            //for (int i = 0; i < expectedValues.Length; ++i)
+            //{
+            //    totalError += Math.Pow(expectedValues[i] - OutputValues[i], 2);
+            //}
+            ////return Fitness = 1.0 / totalError;
+            //return Fitness = expectedValues.Length / totalError;
         }
     }
 }
